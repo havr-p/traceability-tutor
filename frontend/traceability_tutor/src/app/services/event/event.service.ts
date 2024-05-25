@@ -22,18 +22,18 @@ export class EventService {
     constructor(private toastr: ToastrService) {
     }
 
-    publishEditorEvent(type: EditorEventType, data?: any) {
-        console.log('publishEditorEvent', type, data);
-        this.eventSource.next(new EditorEvent(type, data));
+    publishEditorEvent(type: EditorEventType, payload?: any) {
+        console.log('publishEditorEvent', type, payload);
+        this.eventSource.next(new EditorEvent(type, payload));
     }
 
-    publishItemViewEvent(type: ItemViewEventType, data: any) {
-        this.eventSource.next(new ItemViewEvent(type, data));
+    publishItemViewEvent(type: ItemViewEventType, payload: any) {
+        this.eventSource.next(new ItemViewEvent(type, payload));
     }
 
-    publishProjectMenuEvent(type: ProjectEventType, data?: any) {
-        console.log('publishProjectMenuEvent', type, data);
-        this.eventSource.next(new ProjectEvent(type, data));
+    publishProjectMenuEvent(type: ProjectEventType, payload?: any) {
+        console.log('publishProjectMenuEvent', type, payload);
+        this.eventSource.next(new ProjectEvent(type, payload));
     }
 
     notify(message: string, type: 'success' | 'error' | 'info' | 'warning', title?: string,
@@ -55,5 +55,8 @@ export class EventService {
                 this.toastr.show(message, title, override);
                 break;
         }
+    }
+    clearToasts() {
+        this.toastr.clear();
     }
 }

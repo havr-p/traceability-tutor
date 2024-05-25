@@ -1,4 +1,4 @@
-import {GetSchemes} from 'rete';
+import {ClassicPreset, GetSchemes} from 'rete';
 import {Connection} from './connection';
 import {ItemNode} from './items/item-node';
 import {Requirement} from './models/requirement';
@@ -9,7 +9,7 @@ export type ItemProps =
 // | OnMessage
 // | MatchMessage
     ItemNode;
-export type ConnProps = Connection<ItemNode, ItemNode>;
+export type ConnProps = Connection<ItemProps, ItemProps>
 // | Connection<MatchMessage, SendMessage>
 // | Connection<OnMessage, MatchMessage>;
 

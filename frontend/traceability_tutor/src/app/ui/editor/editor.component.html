@@ -12,6 +12,15 @@
     </ng-template>
     <app-item-info-view (toggleVisible)="onItemInfoViewToggleVisible($event)"
                         (viewInitialized)="onItemViewInitialized()"
-                        [item]="openedItem"></app-item-info-view>
+                        [getRelationships]="editorService.getRelationships.bind(this)"
+                        [item]="openedItem"></app-item-info-view
+    >
 
 </p-sidebar>
+
+<p-dialog [(visible)]="createItemVisible"></p-dialog>
+
+<p-dialog [(visible)]="createConnectionVisible" [draggable]="true"
+          [resizable]="true" [style]="{ width: '20vw', }" header="Create relationship">
+    <app-create-relationship-form [createRelationshipPair]="createConnectionPair" (onRelationshipCreation)="onRelationshipCreation($event)"></app-create-relationship-form>
+</p-dialog>

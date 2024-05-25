@@ -5,8 +5,8 @@
             <p-tabView [activeIndex]="activeIndex">
                 <p-tabPanel header="Login">
                     <app-login (onSubmitLoginEvent)="handleLocalLogin($event)" class="form-container"></app-login>
-                    <p-button (onClick)="handleGithubLogin()" icon="pi pi-github"
-                              label="Sign in with GitHub"></p-button>
+<!--                    <p-button (onClick)="handleGithubLogin()" icon="pi pi-github"-->
+<!--                              label="Sign in with GitHub"></p-button>-->
                 </p-tabPanel>
                 <p-tabPanel header="Sign Up">
                     <app-signup (onSubmitRegisterEvent)="handleSignUp($event)" class="form-container"></app-signup>

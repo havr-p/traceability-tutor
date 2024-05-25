@@ -74,6 +74,7 @@ import {CreateRelationshipFormComponent} from "./ui/forms/create-relationship-fo
         CreateProjectFormComponent,
         AppRoutingModule,
         DockComponent,
+        CreateRelationshipFormComponent,
     ],
     providers: [
         {

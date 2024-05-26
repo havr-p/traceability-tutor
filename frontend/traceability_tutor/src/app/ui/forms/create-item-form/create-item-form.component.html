@@ -1,0 +1,65 @@
+<form [formGroup]="itemForm" (ngSubmit)="createItem()" class="app-form" >
+    <div class="form-field">
+        <label for="name">Name</label>
+        <input
+                type="text"
+                pInputText
+                id="name"
+                formControlName="name"
+                required
+                autofocus />
+        <small class="p-error" *ngIf="submitted && itemForm.controls['name'].invalid">
+            Name is required.
+        </small>
+    </div>
+    <div class="form-field">
+        <label for="statement">Statement</label>
+        <textarea
+                id="statement"
+                pInputTextarea
+                formControlName="statement"
+                required
+                rows="3"
+                cols="20">
+        </textarea>
+        <small class="p-error" *ngIf="submitted && itemForm.controls['statement'].invalid">
+            Statement is required.
+        </small>
+    </div>
+    <div class="flex gap-5 align-items-center align-content-center">
+        <div class="form-field" *ngIf="itemForm.controls['level']">
+            <label for="level">Level</label>
+            <p-dropdown formControlName="level"
+                        [options]="this.editorService.getLevelNames(itemType)"
+                        id="level" placeholder="Select a level"></p-dropdown>
+        </div>
+        <div class="form-field">
+            <label for="status">Status</label>
+            <p-dropdown formControlName="status" [options]="statuses" id="status" placeholder="Select a status"></p-dropdown>
+        </div>
+    </div>
+    <div class="form-field">
+        <label for="description">Description</label>
+        <textarea id="description" formControlName="description" pInputTextarea></textarea>
+    </div>
+    <ng-container *ngIf="itemForm.controls['links']">
+        <div class="form-field">
+            <p>{{linksLabel}}</p>
+            <p-scrollPanel class="border-1 border-round" [style]="{ width: '100%', height: '150px', padding: '20px' }">
+                <div id="links" *ngFor="let linkCtrl of links.controls; let i = index">
+                    <p>{{ linkCtrl.value.url }} - {{ linkCtrl.value.addedAt | date:'short' }}</p>
+                    <p-divider *ngIf="i < links.controls.length - 1"></p-divider>
+                </div>
+            </p-scrollPanel>
+            <div class="flex text-center pt-3 mt-2 align-items-center">
+                <label for="newLink" style="margin-right: 10px;">Add link: </label>
+                <input id="newLink" type="text" pInputText formControlName="newLink" style="max-width: 80%; align-self: center" />
+                <p-button severity="primary" styleClass="ml-2 p-button-rounded p-button-sm" icon="pi pi-plus" type="button" (click)="addLink()" ></p-button>
+            </div>
+        </div>
+    </ng-container>
+    <div class="flex justify-content-center align-content-center align-items-center">
+        <p-button label="Create item" type="submit" [disabled]="itemForm.invalid"></p-button>
+            <p-button label="Cancel" type="button" severity="secondary" (click)="hideDialog()"></p-button>
+    </div>
+</form>

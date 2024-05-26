@@ -1,42 +1,148 @@
 <ng-container [ngSwitch]="item.itemType">
-    <div *ngSwitchCase="ItemType.REQUIREMENT" class="p-fluid">
+    <form *ngSwitchCase="ItemType.REQUIREMENT" [formGroup]="itemForm" (ngSubmit)="saveChanges()" class="p-fluid">
         <div class="grid p-4 gap-3">
             <div class="col-12 md:col-6 lg:col-4">
-                <strong>ID:</strong> {{ item.internalProjectUUID }}
+                <h3>Item ID: {{ item.id }}</h3>
             </div>
             <div class="col-12 md:col-6 lg:col-4">
-                <strong>Level:</strong> {{ item.data['level'] }}
+                <h3>Item type: Requirement</h3>
+            </div>
+            <div class="col-12">
+<!--                <div class="flex flex-column gap-2">-->
+<!--                    <label for="level">Level</label>-->
+<!--                    <p-dropdown formControlName="level" [options]="this.editorService.getLevelNames(item.itemType)" id="level" placeholder="Select a level"></p-dropdown>-->
+<!--                </div>-->
+              <h3>Level:  {{editorService.getLevelName(item)}}</h3>
             </div>
             <div class="col-12 p-field">
                 <div class="flex flex-column gap-2">
                     <label for="name">Name</label>
-                    <input [(ngModel)]="item.data['name']" aria-describedby="name-help" id="name" pInputText/>
+                    <input id="name" formControlName="name" pInputText aria-describedby="name-help" />
                     <small id="name-help"></small>
                 </div>
             </div>
             <div class="col-12">
                 <div class="flex flex-column gap-2">
                     <label for="statement">Statement</label>
-                    <textarea [(ngModel)]="item.data['statement']" id="statement" pInputTextarea></textarea>
+                    <textarea id="statement" formControlName="statement" pInputTextarea></textarea>
                 </div>
             </div>
             <div class="col-12">
                 <div class="flex flex-column gap-2">
                     <label for="status">Status</label>
-                    <p-dropdown (onChange)="dataChanged = true;" [(ngModel)]="item.status" [options]="['Open', 'Closed', 'TBD']"
-                                id="status" placeholder="Select a status"></p-dropdown>
+                    <p-dropdown formControlName="status" [options]="['Open', 'Closed', 'TBD']" id="status" placeholder="Select a status"></p-dropdown>
                 </div>
             </div>
         </div>
-        <div class="col-12 mt-2">
-            <label for="relationships">Relationships</label>
-            <div class="flex flex-column gap-2" id="relationships">
-                <ng-container *ngFor="let rel of relationships">
-                    <div class="p-2 bg-gray-100 border-round">{{JSON.stringify(rel)}}</div>
-                </ng-container>
+                <app-relationship-table [relationships]="relationships"
+                                        [item]="item"></app-relationship-table>
+    </form>
+
+    <form *ngSwitchCase="ItemType.DESIGN" [formGroup]="itemForm" (ngSubmit)="saveChanges()" class="p-fluid">
+        <div class="grid p-4 gap-3">
+            <div class="col-12 md:col-6 lg:col-4">
+                <h3>ID: {{ item.id }}</h3>
+            </div>
+            <div class="col-12">
+                <div class="flex flex-column gap-2">
+                    <label for="level">Level</label>
+                    <input id="level" formControlName="level" pInputText readonly />
+                </div>
+            </div>
+            <div class="col-12 p-field">
+                <div class="flex flex-column gap-2">
+                    <label for="name">Name</label>
+                    <input id="name" formControlName="name" pInputText aria-describedby="name-help" />
+                    <small id="name-help"></small>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="flex flex-column gap-2">
+                    <label for="statement">Statement</label>
+                    <textarea id="statement" formControlName="statement" pInputTextarea></textarea>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="flex flex-column gap-2">
+                    <label for="links">Links</label>
+                    <textarea id="links" formControlName="links" pInputTextarea></textarea>
+                </div>
             </div>
         </div>
-    </div>
+        <app-relationship-table [relationships]="relationships"
+                                [item]="item"></app-relationship-table>
+    </form>
+
+    <form *ngSwitchCase="ItemType.CODE" [formGroup]="itemForm" (ngSubmit)="saveChanges()" class="p-fluid">
+        <div class="grid p-4 gap-3">
+            <div class="col-12 md:col-6 lg:col-4">
+                <h3>ID: {{ item.id }}</h3>
+            </div>
+            <div class="col-12">
+                <div class="flex flex-column gap-2">
+                    <label for="level">Level</label>
+                    <input id="level" formControlName="level" pInputText readonly />
+                </div>
+            </div>
+            <div class="col-12 p-field">
+                <div class="flex flex-column gap-2">
+                    <label for="name">Name</label>
+                    <input id="name" formControlName="name" pInputText aria-describedby="name-help" />
+                    <small id="name-help"></small>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="flex flex-column gap-2">
+                    <label for="statement">Statement</label>
+                    <textarea id="statement" formControlName="statement" pInputTextarea></textarea>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="flex flex-column gap-2">
+                    <label for="commits">Commits</label>
+                    <textarea id="commits" formControlName="commits" pInputTextarea></textarea>
+                </div>
+            </div>
+        </div>
+        <app-relationship-table [relationships]="relationships"
+                                [item]="item"></app-relationship-table>
+    </form>
+
+    <form *ngSwitchCase="ItemType.TEST" [formGroup]="itemForm" (ngSubmit)="saveChanges()" class="p-fluid">
+        <div class="grid p-4 gap-3">
+            <div class="col-12 md:col-6 lg:col-4">
+                <h3>ID: {{ item.id }}</h3>
+            </div>
+            <div class="col-12">
+                <div class="flex flex-column gap-2">
+                    <label for="level">Level</label>
+                    <input id="level" formControlName="level" pInputText readonly />
+                </div>
+            </div>
+            <div class="col-12 p-field">
+                <div class="flex flex-column gap-2">
+                    <label for="name">Name</label>
+                    <input id="name" formControlName="name" pInputText aria-describedby="name-help" />
+                    <small id="name-help"></small>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="flex flex-column gap-2">
+                    <label for="statement">Statement</label>
+                    <textarea id="statement" formControlName="statement" pInputTextarea></textarea>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="flex flex-column gap-2">
+                    <label for="test_reports">Test Reports</label>
+                    <textarea id="test_reports" formControlName="test_reports" pInputTextarea></textarea>
+                </div>
+            </div>
+        </div>
+        <app-relationship-table [relationships]="relationships"
+                                [item]="item"></app-relationship-table>
+    </form>
+
     <ng-container *ngSwitchDefault>
         <p>undefined</p>
     </ng-container>

@@ -4,23 +4,39 @@
            [closeOnEscape]="true"
            [modal]="false"
 
+
            position="right"
-           styleClass="p-sidebar-md">
+           [style]="{'min-width': '60rem'}">
     <ng-template pTemplate="header">
         <!--    <p class="text-2xl"> {{ this.openedItem.data.id + "           " }}         <span-->
         <!--      class="font-medium">{{ openedItemTitle }}</span></p>-->
     </ng-template>
     <app-item-info-view (toggleVisible)="onItemInfoViewToggleVisible($event)"
                         (viewInitialized)="onItemViewInitialized()"
-                        [getRelationships]="editorService.getRelationships.bind(this)"
+                        [editorService]="editorService"
                         [item]="openedItem"></app-item-info-view
     >
 
 </p-sidebar>
 
-<p-dialog [(visible)]="createItemVisible"></p-dialog>
 
-<p-dialog [(visible)]="createConnectionVisible" [draggable]="true"
-          [resizable]="true" [style]="{ width: '20vw', }" header="Create relationship">
-    <app-create-relationship-form [createRelationshipPair]="createConnectionPair" (onRelationshipCreation)="onRelationshipCreation($event)"></app-create-relationship-form>
+<app-create-relationship-form [visible]="createRelationshipVisible"></app-create-relationship-form>
+
+<p-dialog
+          [(visible)]="createItemVisible"
+          [style]="{ width: '900px' }"
+          [header]="'Create a new ' + (editorService.getCreateItemType()?.toString()?.toLowerCase() || 'item')"
+          [closable]="true"
+          [draggable]="true"
+          [resizable]="true">
+
+    <app-create-item-form
+            (onItemCreate)="onItemCreate($event)"
+            [visible]="createItemVisible">
+    </app-create-item-form>
+
 </p-dialog>
+
+
+
+

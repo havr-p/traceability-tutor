@@ -25,4 +25,8 @@ public interface RelationshipRepository extends JpaRepository<Relationship, Long
             " or r.endItem.project.id = ?1)" +
             " order by r.dateCreated asc")
     List<Relationship> findNonReleaseByProjectId(Long projectId);
+
+    @Query("select r from Relationship r where r.release = ?1 and (r.startItem.id = ?2 " +
+            " or r.endItem.id = ?2)")
+    List<Relationship> findAllRelatedToItemAndRelease(Long releaseId, Long itemId);
 }

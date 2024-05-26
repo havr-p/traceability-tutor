@@ -14,6 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class RelationshipDTO {
 
+    @NotNull
     private Long id;
 
     @NotNull

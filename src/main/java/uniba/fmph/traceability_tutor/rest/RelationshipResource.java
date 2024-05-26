@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uniba.fmph.traceability_tutor.model.CreateRelationshipDTO;
 import uniba.fmph.traceability_tutor.model.ItemDTO;
+import uniba.fmph.traceability_tutor.model.RelatedToItemRelRequest;
 import uniba.fmph.traceability_tutor.model.RelationshipDTO;
 import uniba.fmph.traceability_tutor.service.RelationshipService;
 
@@ -49,10 +50,10 @@ public class RelationshipResource {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Long> updateRelationship(@PathVariable(name = "id") final Long id,
+    public ResponseEntity<RelationshipDTO> updateRelationship(@PathVariable(name = "id") final Long id,
                                                    @RequestBody @Valid final RelationshipDTO relationshipDTO) {
-        relationshipService.update(id, relationshipDTO);
-        return ResponseEntity.ok(id);
+        var dto = relationshipService.update(id, relationshipDTO);
+        return ResponseEntity.ok(dto);
     }
 
     @DeleteMapping("/{id}")
@@ -69,5 +70,11 @@ public class RelationshipResource {
     public ResponseEntity<List<RelationshipDTO>> getProjectEditableRelationships(@PathVariable(name = "id") final Long projectId) {
         return ResponseEntity.ok(relationshipService.getProjectEditableRelationships(projectId));
     }
+
+//    @Operation(security = {@SecurityRequirement(name = BEARER_SECURITY_SCHEME)})
+//    @GetMapping("/item/all")
+//    public ResponseEntity<List<RelationshipDTO>> getRelationshipsWith(@RequestBody RelatedToItemRelRequest request) {
+//        return ResponseEntity.ok(relationshipService.getRelationshipsWith(request));
+//    }
 
 }

@@ -51,7 +51,7 @@ export class RelationshipResourceService {
       `/api/relationships/${id}`,options
     );
   }
- updateRelationship<TData = number>(
+ updateRelationship<TData = RelationshipDTO>(
     id: number,
     relationshipDTO: RelationshipDTO, options?: HttpClientOptions
   ): Observable<TData>  {
@@ -92,7 +92,7 @@ export class RelationshipResourceService {
 };
 
 export type GetRelationshipClientResult = NonNullable<RelationshipDTO>
-export type UpdateRelationshipClientResult = NonNullable<number>
+export type UpdateRelationshipClientResult = NonNullable<RelationshipDTO>
 export type DeleteRelationshipClientResult = NonNullable<void>
 export type GetAllRelationshipsClientResult = NonNullable<RelationshipDTO[]>
 export type CreateRelationshipClientResult = NonNullable<RelationshipDTO>

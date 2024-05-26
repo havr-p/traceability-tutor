@@ -7,6 +7,7 @@ import uniba.fmph.traceability_tutor.domain.Relationship;
 import uniba.fmph.traceability_tutor.domain.Release;
 import uniba.fmph.traceability_tutor.model.CreateRelationshipDTO;
 import uniba.fmph.traceability_tutor.model.ItemDTO;
+import uniba.fmph.traceability_tutor.model.RelatedToItemRelRequest;
 import uniba.fmph.traceability_tutor.model.RelationshipDTO;
 import uniba.fmph.traceability_tutor.repos.ItemRepository;
 import uniba.fmph.traceability_tutor.repos.RelationshipRepository;
@@ -49,10 +50,11 @@ public class RelationshipService {
         return mapToDTO(relationshipRepository.save(mapToEntity(relationshipDTO, relationship)), dto);
     }
 
-    public void update(final Long id, final RelationshipDTO relationshipDTO) {
+    public RelationshipDTO update(final Long id, final RelationshipDTO relationshipDTO) {
         final Relationship relationship = relationshipRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
-        relationshipRepository.save(mapToEntity(relationshipDTO, relationship));
+        var dto = new RelationshipDTO();
+        return mapToDTO(relationshipRepository.save(mapToEntity(relationshipDTO, relationship)), dto);
     }
 
     public void delete(final Long id) {
@@ -106,4 +108,10 @@ public class RelationshipService {
                 .map(item -> mapToDTO(item, new RelationshipDTO()))
                 .toList();
     }
+
+//    public List<RelationshipDTO> getRelationshipsWith(RelatedToItemRelRequest request) {
+//        return relationshipRepository.findAllRelatedToItemAndRelease(request.releaseId().get(), request.itemId()).stream()
+//                .map(item -> mapToDTO(item, new RelationshipDTO()))
+//                .toList();
+//    }
 }

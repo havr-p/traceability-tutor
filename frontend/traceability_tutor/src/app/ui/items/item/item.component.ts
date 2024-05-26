@@ -1,15 +1,16 @@
 import {
-  ChangeDetectorRef,
-  Component,
-  HostBinding,
-  HostListener,
-  Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
+    ChangeDetectorRef,
+    Component,
+    HostBinding,
+    HostListener,
+    Input,
+    OnChanges,
+    OnInit,
+    SimpleChanges,
 } from '@angular/core';
 import {ItemNode} from '../../../items/item-node';
 import {EventService} from '../../../services/event/event.service';
+import {EditorEventType} from "../../../types";
 
 @Component({
     templateUrl: './item.component.html',
@@ -47,6 +48,10 @@ export class ItemComponent implements OnChanges, OnInit {
     this.data.selected = true;
   }
 
+    @HostListener('dblclick', ['$event']) onDblClick(btn: any) {
+        this.eventService.publishEditorEvent(EditorEventType.SELECT_ITEM, this.data);
+    }
+
     ngOnInit(): void {
         this.updateShortLabel();
     }
@@ -71,8 +76,8 @@ export class ItemComponent implements OnChanges, OnInit {
 
     updateShortLabel() {
         const label = this.data.label || '';
-        if (label.length > 90) {
-            this.shortLabel = label.substring(0, 90) + '...';
+        if (label.length > 40) {
+            this.shortLabel = label.substring(0, 50) + '...';
         } else {
             this.shortLabel = label;
         }

@@ -1,3 +1,4 @@
+<h3 class=" pb-1 pr-2">{{ data.data.id }}</h3>
 <div class="title" data-testid="title">{{ shortLabel }}</div>
 <div class="outputs">
     <div *ngFor="let output of data.outputs | keyvalue: sortByIndex" [attr.data-testid]="'output-'+output.key"

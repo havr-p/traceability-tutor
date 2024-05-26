@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Project} from "./project";
 import {ProjectDTO, RelationshipType, ReleaseDTO} from "../../../gen/model";
-import {Item} from "../items/Item";
 import {Release} from "./release";
 import {
   CURRENT_PROJECT_KEY,
@@ -11,6 +10,7 @@ import {
 import {ValidationService} from "../services/validation/validation.service";
 import {ItemProps} from "../types";
 import {Connection} from "../connection";
+import {Item} from "./itemMapper";
 
 export interface EditorState {
     nodes: ItemProps[],

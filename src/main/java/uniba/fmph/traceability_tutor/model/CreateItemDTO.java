@@ -14,7 +14,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class CreateItemDTO {
 
-    @NotBlank
+    @NotNull
     Long projectId;
 
     @NotNull

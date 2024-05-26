@@ -53,6 +53,11 @@
   gap: 8px;
 }
 
+.flex {
+  display: flex;
+  gap: 16px;
+}
+
 
 .p-orderlist-controls {
   display: none;

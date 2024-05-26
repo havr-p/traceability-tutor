@@ -34,6 +34,7 @@ import {HTTP_INTERCEPTORS} from "@angular/common/http";
 import {AuthInterceptor} from "./interceptors/auth.interceptor";
 import {APIInterceptor} from "./interceptors/api-interceptor";
 import {CreateRelationshipFormComponent} from "./ui/forms/create-relationship-form/create-relationship-form.component";
+import {CreateItemFormComponent} from "./ui/forms/create-item-form/create-item-form.component";
 
 @NgModule({
     bootstrap: [AppComponent],
@@ -75,6 +76,8 @@ import {CreateRelationshipFormComponent} from "./ui/forms/create-relationship-fo
         AppRoutingModule,
         DockComponent,
         CreateRelationshipFormComponent,
+        CreateItemFormComponent,
+        CreateItemFormComponent,
     ],
     providers: [
         {

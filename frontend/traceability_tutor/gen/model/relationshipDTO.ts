@@ -14,7 +14,7 @@ export interface RelationshipDTO {
   description?: string;
   endItem: number;
   historyAction?: HistoryAction;
-  id?: number;
+  id: number;
   release?: number;
   startItem: number;
   type: RelationshipType;

@@ -10,17 +10,17 @@ export class GraphCycleDetector {
 
     public isCyclic(): boolean {
         const nodes = this.graph.nodes();
-        const vis: { [key: string]: boolean } = {};
-        const dfsVis: { [key: string]: boolean } = {};
+        const visited: { [key: string]: boolean } = {};
+        const dfs: { [key: string]: boolean } = {};
 
         for (const node of nodes) {
-            vis[node.id] = false;
-            dfsVis[node.id] = false;
+            visited[node.id] = false;
+            dfs[node.id] = false;
         }
 
         for (const node of nodes) {
-            if (!vis[node.id]) {
-                if (this.checkCycle(node.id, this.graph, vis, dfsVis)) {
+            if (!visited[node.id]) {
+                if (this.checkCycle(node.id, this.graph, visited, dfs)) {
                     return true;
                 }
             }
@@ -29,23 +29,23 @@ export class GraphCycleDetector {
         return false;
     }
 
-    private checkCycle(nodeId: string, graph: any, vis: { [key: string]: boolean }, dfsVis: { [key: string]: boolean }): boolean {
-        vis[nodeId] = true;
-        dfsVis[nodeId] = true;
+    private checkCycle(nodeId: string, graph: any, visited: { [key: string]: boolean }, dfs: { [key: string]: boolean }): boolean {
+        visited[nodeId] = true;
+        dfs[nodeId] = true;
 
         const outgoingNodes = graph.successors(nodeId).nodes();
 
         for (const neighbor of outgoingNodes) {
-            if (!vis[neighbor.id]) {
-                if (this.checkCycle(neighbor.id, graph, vis, dfsVis)) {
+            if (!visited[neighbor.id]) {
+                if (this.checkCycle(neighbor.id, graph, visited, dfs)) {
                     return true;
                 }
-            } else if (dfsVis[neighbor.id]) {
+            } else if (dfs[neighbor.id]) {
                 return true;
             }
         }
 
-        dfsVis[nodeId] = false;
+        dfs[nodeId] = false;
         return false;
     }
 }

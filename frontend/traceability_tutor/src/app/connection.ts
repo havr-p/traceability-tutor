@@ -1,7 +1,7 @@
 import {ClassicPreset} from 'rete';
 import {ItemProps} from './types';
 import {Subject} from 'rxjs';
-import {RelationshipDTO, RelationshipType} from "../../gen/model";
+import {CreateRelationshipDTO, RelationshipDTO, RelationshipType} from "../../gen/model";
 
 // export class Connection<
 //   A extends NodeProps,
@@ -16,17 +16,24 @@ export class Connection<
   Target extends ItemProps,
 > extends ClassicPreset.Connection<Source, Target> {
   selected?: boolean;
-  relationshipData: RelationshipDTO;
+  data: RelationshipDTO | CreateRelationshipDTO;
   private changes = new Subject<any>();
   public changes$ = this.changes.asObservable();
 
-  constructor(source: Source, sourceOutput: keyof Source['outputs'], target: Target, targetInput: keyof Target['inputs'], relationshipData: RelationshipDTO) {
+  constructor(
+              source: Source,
+              sourceOutput: keyof Source['outputs'],
+              target: Target,
+              targetInput: keyof Target['inputs'],
+              relationshipData: RelationshipDTO | CreateRelationshipDTO) {
+
     super(source, sourceOutput, target, targetInput);
-    this.relationshipData = relationshipData;
-  }
+    this.data = relationshipData;
+      }
+
 
   public updateData(data: any) {
-    this.relationshipData = data.relationshipData ?? this.relationshipData;
+    this.data = data.data ?? this.data;
     this.selected = data.selected ?? this.selected;
     this.changes.next(data);
   }

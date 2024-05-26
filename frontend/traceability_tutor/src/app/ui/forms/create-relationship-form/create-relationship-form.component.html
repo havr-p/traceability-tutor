@@ -1,11 +1,14 @@
-<form [formGroup]="relationshipForm" (ngSubmit)="createRelationship()" class="app-form">
+<p-dialog [(visible)]="visible" [draggable]="true"
+          [resizable]="true" [style]="{ width: '20vw', }" header="{{ mode === 'create' ? 'Create Relationship' : 'Update Relationship' }}">
+
+<form [formGroup]="relationshipForm" (ngSubmit)="submitForm()" class="app-form">
     <div class="form-field">
         <label for="startItem">Start Item</label>
-        <input id="startItem" formControlName="startItem" pInputText readonly />
+        <input id="startItem" formControlName="startItem" pInputText />
     </div>
     <div class="form-field">
         <label for="endItem">End Item</label>
-        <input id="endItem" formControlName="endItem" pInputText readonly />
+        <input id="endItem" formControlName="endItem" pInputText />
     </div>
     <div class="form-field">
         <label for="type">Type</label>
@@ -15,8 +18,12 @@
         <label for="description">Description</label>
         <textarea id="description" formControlName="description" pInputTextarea></textarea>
     </div>
-    <p-button label="Create Relationship" type="submit" [disabled]="relationshipForm.invalid"></p-button>
+    <p-button label="{{ mode === 'create' ? 'Create Relationship' : 'Update Relationship' }}" type="submit" [disabled]="relationshipForm.invalid"></p-button>
     <div *ngIf="relationshipForm.errors?.['notCreatingCycle']" class="p-error">
         Creating this relationship would create a cycle.
     </div>
+  <div *ngIf="relationshipForm.errors?.['itemsDoNotExist']" class="p-error">
+    Both items must be present in editor.
+  </div>
 </form>
+</p-dialog>

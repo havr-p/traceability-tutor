@@ -1,7 +1,6 @@
 import {ClassicPreset, GetSchemes} from 'rete';
 import {Connection} from './connection';
 import {ItemNode} from './items/item-node';
-import {Requirement} from './models/requirement';
 
 export type ItemProps =
 // | DebugChat
@@ -16,9 +15,10 @@ export type ConnProps = Connection<ItemProps, ItemProps>
 export type Schemes = GetSchemes<ItemProps, ConnProps>;
 
 export enum EditorEventType {
-    ADD_ITEM = 'add',
-    ADD_CONNECTION = 'add connection',
-    REMOVE = 'remove',
+    ADD_ITEM = 'add item',
+    ADD_RELATIONSHIP = 'add relationship',
+    ADD_RELATIONSHIP_SELECT_SOURCE = 'add relationship select source',
+    REMOVE_ITEM = 'remove',
     EDIT = 'edit',
     SELECT_ITEM = 'select item',
     SELECT_RELATIONSHIP = 'select relationship',
@@ -30,6 +30,7 @@ export enum EditorEventType {
     TO_PROJECTS_MENU = 'to projects menu',
     SAVE_ITERATION = 'save iteration',
     CHOOSE_SECOND_ITEM = 'choose second item',
+    REARRANGE = 'rearrange',
 }
 
 export enum ProjectEventType {
@@ -87,4 +88,3 @@ export class ProjectEvent extends BaseEvent<
 }
 
 
-export type ItemDataType = Requirement; // | Source

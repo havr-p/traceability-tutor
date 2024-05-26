@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { EventService } from '../../services/event/event.service';
 import { LocalStorageService } from '../../services/local-storage/local-storage.service';
 import { StateManager } from '../../models/state';
-import { MenuItem } from 'primeng/api';
+import {MenuItem, MenuItemCommandEvent} from 'primeng/api';
 import { EditorEventType, ProjectEventType } from '../../types';
 import { ProjectResourceService } from '../../../../gen/services/project-resource';
 import { ItemType } from '../../../../gen/model';
@@ -39,21 +39,32 @@ export class DockManager {
     if (mode === 'editor') {
       items = [
         {
-          label: 'Add...',
+          label: 'Item',
           items: [
             {
-              label: 'Item',
+              label: 'New...',
               items: [
                 {
                   label: 'Requirement',
                   tooltip: 'Use this command to create a new requirement node',
                   tooltipPosition: 'bottom',
                   command: async () => {
-                    const data = { itemType: ItemType.REQUIREMENT };
+                    const data = ItemType.REQUIREMENT
                     this.eventService.publishEditorEvent(EditorEventType.ADD_ITEM, data);
                   },
                 },
               ]
+            }
+          ],
+        },
+        {
+          label: 'Relationship',
+          items: [
+            {
+              label: 'Add',
+              command: async () => {
+                this.eventService.publishEditorEvent(EditorEventType.ADD_RELATIONSHIP);
+              },
             }
           ],
         },
@@ -69,7 +80,7 @@ export class DockManager {
           ],
         },
         {
-          label: 'Data...',
+          label: 'Data',
           items: [
             {
               label: 'Clear editor',
@@ -79,6 +90,7 @@ export class DockManager {
             },
             {
               label: 'Import',
+              disabled: true,
               command: () => {
                 this.eventService.publishEditorEvent(EditorEventType.IMPORT);
               },
@@ -90,6 +102,17 @@ export class DockManager {
               },
             },
           ],
+        },
+        {
+          label: 'View',
+          items: [
+            {
+              label: 'Rearrange items',
+              command: () => {
+                this.eventService.publishEditorEvent(EditorEventType.REARRANGE)
+              }
+            }
+          ]
         },
         {
           label: 'Projects menu',

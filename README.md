@@ -1,8 +1,8 @@
 # TraceabilityTutor
 
-This app was created with Bootify.io - tips on working with the
-code [can be found here](https://bootify.io/next-steps/).
-Feel free to contact us for further questions.
+## Demo
+The application is fully hosted on cloud application hosting services such as Vercel and Render. You can access the application [here](https://traceability-tutor.vercel.app/).   
+An application database was populated with demo project and user. You can access a demo project using "Sign in as test user".
 
 ## Development
 
@@ -16,6 +16,7 @@ Lombok must be supported by your IDE. For IntelliJ install the Lombok plugin and
 [learn more](https://bootify.io/next-steps/spring-boot-with-lombok.html).
 
 After starting the application it is accessible under `localhost:8080`.
+
 
 ## Build
 
@@ -31,12 +32,13 @@ Start your application with the following command - here with the profile `produ
 java -Dspring.profiles.active=production -jar ./target/traceability-tutor-0.0.1-SNAPSHOT.jar
 ```
 
-If required, a Docker image can be created with the Spring Boot plugin. Add `SPRING_PROFILES_ACTIVE=production` as
-environment variable when running the container.
+To run the frontend locally run following commands:
+```
+npm i
+cd frontend/traceability_tutor
+npm start
+```
 
-```
-mvnw spring-boot:build-image -Dspring-boot.build-image.imageName=uniba.fmph/traceability-tutor
-```
 
 ## Further readings
 

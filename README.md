@@ -34,8 +34,8 @@ java -Dspring.profiles.active=production -jar ./target/traceability-tutor-0.0.1-
 
 To run the frontend locally run following commands:
 ```
-npm i
 cd frontend/traceability_tutor
+npm i
 npm start
 ```
 

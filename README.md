@@ -6,16 +6,16 @@ An application database was populated with demo project and user. You can access
 
 ## Development
 
-Update your local database connection in `application.yml` or create your own `application-local.yml` file to override
+Currently app uses database hosted on Render. You can update your local database connection in `application.yml` or create your own `application-local.yml` file to override
 settings for development.
 
-During development it is recommended to use the profile `local`. In IntelliJ `-Dspring.profiles.active=local` can be
+During development it is recommended to use the `local` profile. In IntelliJ `-Dspring.profiles.active=local` can be
 added in the VM options of the Run Configuration after enabling this property in "Modify options".
 
 Lombok must be supported by your IDE. For IntelliJ install the Lombok plugin and enable annotation processing -
 [learn more](https://bootify.io/next-steps/spring-boot-with-lombok.html).
 
-After starting the application it is accessible under `localhost:8080`.
+After starting the application is accessible under `localhost:8080`.
 
 
 ## Build

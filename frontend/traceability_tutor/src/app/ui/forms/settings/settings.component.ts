@@ -90,14 +90,14 @@ export class SettingsComponent implements OnChanges {
   }
 
   private loadProjectSettings() {
-    this.projectId = this.state.currentProject?.id!;
+    this.projectId = this.state.currentProject()?.id!;
     // this.projectService.getProjectSettings(this.projectId).subscribe({
     //   next: (value) => {
     //     this.projectSettings = value;
     //     this.settingsForm.patchValue(value);
     //   }
     // });
-    this.projectSettings = this.state.currentProjectSettings!;
+    this.projectSettings = this.state.currentProjectSettings()!;
     this.settingsForm.patchValue(this.projectSettings);
   }
 
@@ -112,7 +112,7 @@ export class SettingsComponent implements OnChanges {
             const formValue = this.settingsForm.getRawValue() as GetProjectSettingsClientResult;
             this.projectService.updateProjectSettings(this.projectId, formValue).subscribe({
               next: () => {
-                this.state.currentProjectSettings = formValue;
+                this.state.currentProjectSettings.set(formValue);
                 this.closeDialog();
                 this.eventService.notify("Project settings was updated successfully!", 'success');
               },

@@ -42,6 +42,7 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
   firstSelectedItem: ItemNode | null = null;
   //relationship crud
   createRelationshipVisible = false;
+  createItemType: ItemType | undefined;
   createConnectionPair: {
     startItem: string,
     endItem: string
@@ -134,6 +135,8 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
   private async handleEditorEvent(event: BaseEvent<EventSource, EditorEventType>): Promise<void> {
     switch (event.type) {
       case EditorEventType.ADD_ITEM:
+        this.createItemType = event.payload;
+        this.editorService.setCreateItemType(event.payload);
         this.createItemVisible = true;
         break;
       case EditorEventType.ADD_RELATIONSHIP:
@@ -257,7 +260,7 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   protected fetchCodeItems() {
-      const token = this.state.currentProjectSettings?.accessToken
+      const token = this.state.currentProjectSettings()?.accessToken
       if (token && token.trim().length > 0)
      this.editorService.fetchCodeItems().then( () => {
        //window.location.reload();

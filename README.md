@@ -52,6 +52,8 @@ npm install
 npm start
 ```
 
+4.  App server api is exposed using swagger. After server start you can access it via `http://localhost:8080/swagger-ui/index.html`. You can use OpenAPI spec with [orval](https://orval.dev/overview) to automatically generate DTOs and models on client, so interfaces used on frontend will always be synchronized with server models.
+
 ### Local testing
 
 A test project with sample data has been prepared to allow users to evaluate the application. To access this project:

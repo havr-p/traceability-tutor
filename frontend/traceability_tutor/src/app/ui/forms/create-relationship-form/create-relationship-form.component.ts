@@ -1,4 +1,5 @@
-import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {Component, DestroyRef, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {
     AbstractControl,
     AsyncValidatorFn,
@@ -42,14 +43,17 @@ export class CreateRelationshipFormComponent {
 
   relationshipForm!: FormGroup;
   relationshipTypes = Object.values(RelationshipType);
-  mode: 'create' | 'update' = 'create'
+  mode: 'create' | 'update' = 'create';
+
+  private destroyRef = inject(DestroyRef);
 
   constructor(private fb: FormBuilder, private editorService: EditorService, private eventService: EventService) {}
 
   ngOnInit(): void {
     this.initializeForm();
-    this.eventService.event$.subscribe(async (event: BaseEvent<EventSource, EditorEventType>) => {
-      //console.log('Event received in form component:', event);
+    this.eventService.event$.pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(async (event: BaseEvent<EventSource, EditorEventType>) => {
       if (event.source === EventSource.EDITOR) {
         switch (event.type) {
           case EditorEventType.ADD_RELATIONSHIP:
@@ -60,7 +64,7 @@ export class CreateRelationshipFormComponent {
               });
               this.mode = 'create';
             }
-            this.visible = true;
+            this.visibleChange.emit(true);
             break;
           case EditorEventType.SELECT_RELATIONSHIP:
             this.relationshipForm.patchValue(event.payload);

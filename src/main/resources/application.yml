@@ -3,21 +3,19 @@ spring:
     name: traceability-tutor
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:6543/ttutor
-    username: ${JDBC_DATABASE_USERNAME:admin}
-    password: ${JDBC_DATABASE_PASSWORD:VYKP9QjBo472QFz}
+    url: ${JDBC_DATABASE_URL:jdbc:postgresql://localhost:6543/ttutor}
+    username: ${JDBC_DATABASE_USERNAME}
+    password: ${JDBC_DATABASE_PASSWORD}
     dbcp2:
       max-wait-millis: 30000
       validation-query: select 1
       validation-query-timeout: 30
   jpa:
-    show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: ${HIBERNATE_DDL_AUTO:validate}
     open-in-view: false
     properties:
       hibernate:
-        format-sql: true
         jdbc:
           lob:
             non_contextual_creation: true
@@ -28,8 +26,8 @@ spring:
       client:
         registration:
           github:
-            client-id: Ov23liK0394qW9swak2d
-            client-secret: abea36565ba2e57f3e6dc429e05b3b478b36bbbd
+            client-id: ${GITHUB_CLIENT_ID}
+            client-secret: ${GITHUB_CLIENT_SECRET}
             scope: read:user, public_repo
 error:
   handling:
@@ -41,24 +39,12 @@ error:
 springdoc:
   pathsToMatch: /api/**, /auth/**
 
-logging:
-  level:
-    org.springframework.security: DEBUG
-    org.springframework.web: DEBUG
-
-
-security:
-  jwt:
-    token:
-      secret-key: my-secret-key
 
 app:
   jwt:
-    # Signing key for HS512 algorithm
-    # In http://www.allkeysgenerator.com/ you can generate all kinds of keys
-    secret: v9y$B&E)H@MbQeThWmZq4t7w!z%C*F-JaNdRfUjXn2r5u8x/A?D(G+KbPeShVkYp
+    secret: ${APP_JWT_SECRET}
     expiration:
-      minutes: 100
+      minutes: ${APP_JWT_EXPIRATION_MINUTES:100}
   oauth2:
     redirectUri: http://localhost:4200/oauth2/redirect
   cors:
@@ -66,4 +52,4 @@ app:
       http://localhost:4200,
       https://traceability-tutor.vercel.app
 
-jasypt.encryptor.password: qJoLwyubGeBWjH8kPMCkBFWPTKJ6gn6kCGQXfyk4sAm7DD7LUPjzcKNhUaPEAb9z
+jasypt.encryptor.password: ${JASYPT_ENCRYPTOR_PASSWORD}

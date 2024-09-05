@@ -1,16 +1,11 @@
 package uniba.fmph.traceability_tutor.domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.Generated;
-import org.hibernate.annotations.GenerationTime;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -57,23 +52,8 @@ public class Item {
 
 
     @Column(nullable = false)
-//    @GeneratedValue(generator = "internal-id-generator")
-//    @GenericGenerator(
-//            name = "internal-id-generator",
-//            type = uniba.fmph.traceability_tutor.domain.InternalIdGenerator.class)
     @ToString.Include
     private Long internalId;
-
-    @Transient
-    @Autowired
-    private InternalIdGenerator internalIdGenerator;
-
-    @PrePersist
-    public void generateInternalId() {
-        if (this.internalId == null) {
-            this.internalId = internalIdGenerator.generateNextInternalId();
-        }
-    }
 
     @Column
     @Enumerated(EnumType.STRING)

@@ -5,12 +5,14 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import uniba.fmph.traceability_tutor.domain.InternalIdGenerator;
 import uniba.fmph.traceability_tutor.config.security.SecretsManager;
 import uniba.fmph.traceability_tutor.domain.*;
 import uniba.fmph.traceability_tutor.mapper.ItemMapper;
@@ -34,6 +36,7 @@ import static uniba.fmph.traceability_tutor.service.TempCreateRelationshipDTO.re
 import static uniba.fmph.traceability_tutor.util.TextUtils.normalizeText;
 
 
+@Slf4j
 @Service
 public class ProjectService {
 
@@ -52,8 +55,9 @@ public class ProjectService {
     private final ItemMapper itemMapper;
     private final LevelMapper levelMapper;
     private final ApplicationEventPublisher eventPublisher;
+    private final InternalIdGenerator internalIdGenerator;
 
-    public ProjectService(ProjectRepository projectRepository, UserRepository userRepository, ItemRepository itemRepository, IterationRepository iterationRepository, RelationshipRepository relationshipRepository, ProjectMapper projectMapper, SecretsManager secretsManager, UserService userService, ItemService itemService, RelationshipService relationshipService, RelationshipMapper relationshipMapper, ItemMapper itemMapper, LevelMapper levelMapper, ApplicationEventPublisher eventPublisher) {
+    public ProjectService(ProjectRepository projectRepository, UserRepository userRepository, ItemRepository itemRepository, IterationRepository iterationRepository, RelationshipRepository relationshipRepository, ProjectMapper projectMapper, SecretsManager secretsManager, UserService userService, ItemService itemService, RelationshipService relationshipService, RelationshipMapper relationshipMapper, ItemMapper itemMapper, LevelMapper levelMapper, ApplicationEventPublisher eventPublisher, InternalIdGenerator internalIdGenerator) {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
         this.itemRepository = itemRepository;
@@ -68,6 +72,7 @@ public class ProjectService {
         this.itemMapper = itemMapper;
         this.levelMapper = levelMapper;
         this.eventPublisher = eventPublisher;
+        this.internalIdGenerator = internalIdGenerator;
     }
 
 
@@ -299,7 +304,7 @@ public class ProjectService {
         item.setData(data);
         item.setStatus(dto.getStatus());
         item.setProject(project);
-        item.setInternalId(dto.internalId);
+        item.setInternalId(dto.internalId != null ? dto.internalId : internalIdGenerator.generateNextInternalId());
         return item;
     }
 
@@ -329,7 +334,7 @@ public class ProjectService {
         item.setData(stringData);
         item.setStatus(dto.getStatus());
         item.setProject(project);
-        item.setInternalId(dto.getInternalId());
+        item.setInternalId(dto.getInternalId() != null ? dto.getInternalId() : internalIdGenerator.generateNextInternalId());
         return item;
     }
 
@@ -346,7 +351,7 @@ public class ProjectService {
                 dto.getData().put("name", normalizeText(name));
             });
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Failed to parse sample items JSON", e);
             tempItemDtos = List.of();
         }
         var list = tempItemDtos.stream().map(dto -> this.mapToEntity(project, dto)).toList();
@@ -358,7 +363,7 @@ public class ProjectService {
             tempCreateRelationshipDTOS = parseJsonCreateRelationshipDTOs();
             tempCreateRelationshipDTOS.forEach(dto -> dto.setDescription(normalizeText(dto.getDescription())));
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Failed to parse sample relationships JSON", e);
             tempCreateRelationshipDTOS = List.of();
         }
 

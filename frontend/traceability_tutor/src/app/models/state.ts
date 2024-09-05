@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable, signal} from '@angular/core';
 import {Project} from "./project";
 import {IterationDTO, ProjectDTO, ProjectSettings, RelationshipType} from "../../../gen/model";
 import {
@@ -22,9 +22,10 @@ export interface EditorState {
     providedIn: 'root'
 })
 export class StateManager {
-    public currentProject: Project | undefined;
-    public currentProjectSettings: ProjectSettings | undefined;
-    public currentRelease: IterationDTO | undefined;
+    // equal: () => false — позволяет триггерить сигнал при мутации того же объекта (напр. addIteration)
+    readonly currentProject = signal<Project | undefined>(undefined, { equal: () => false });
+    readonly currentProjectSettings = signal<ProjectSettings | undefined>(undefined);
+    readonly currentRelease = signal<IterationDTO | undefined>(undefined);
     private projects: Map<number, Project> = new Map();
     private editorState: EditorState | undefined;
 
@@ -38,7 +39,7 @@ export class StateManager {
     createProject(projectDTO: ProjectDTO): Project {
         const project = new Project(projectDTO);
         this.projects.set(project.id!, project);
-        this.currentProject = project;
+        this.currentProject.set(project);
         return project;
     }
 
@@ -47,7 +48,7 @@ export class StateManager {
     }
 
     saveCurrentProject() {
-        this.localStorageService.saveData(CURRENT_PROJECT_KEY, this.currentProject);
+        this.localStorageService.saveData(CURRENT_PROJECT_KEY, this.currentProject());
     }
 
     addRelease(projectId: number, commitHash: string, semanticId?: string): IterationDTO {
@@ -76,6 +77,7 @@ export class StateManager {
     }
 
   async setCurrentProjectSettings(project: Project) {
-    this.currentProjectSettings = await firstValueFrom(this.projectService.getProjectSettings(project.id));
+    const settings = await firstValueFrom(this.projectService.getProjectSettings(project.id));
+    this.currentProjectSettings.set(settings);
   }
 }

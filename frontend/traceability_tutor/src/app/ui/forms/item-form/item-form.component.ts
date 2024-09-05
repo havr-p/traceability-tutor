@@ -7,10 +7,8 @@ import {ButtonModule} from 'primeng/button';
 import {DividerModule} from 'primeng/divider';
 import {DatePipe, NgForOf, NgIf} from '@angular/common';
 import {ScrollPanelModule} from 'primeng/scrollpanel';
-import {EventService} from "../../../services/event/event.service";
 import {EditorService} from "../../../services/editor/editor.service";
 import {StateManager} from "../../../models/state";
-import {BaseEvent, EditorEventType, EventSource} from "../../../types";
 import {ItemType} from "../../../../../gen/model";
 import {Item} from "../../../models/itemMapper";
 
@@ -39,40 +37,27 @@ export class ItemFormComponent implements OnInit, OnChanges {
   statuses: string[] = [];
   linksLabel: string = '';
 
-  itemType!: ItemType;
+  @Input() itemType: ItemType | undefined;
   @Input() visible: boolean = false;
   @Input() formData: Item | undefined;
   @Output() formDataChange = new EventEmitter<Item>;
   @Input() mode: "create" | "update" = "create";
 
   constructor(private fb: FormBuilder,
-              private eventService: EventService,
               public editorService: EditorService,
               private state: StateManager) {}
 
   ngOnInit(): void {
     this.initializeForm();
-    this.eventService.event$.subscribe(
-        async (event: BaseEvent<EventSource, EditorEventType>) => {
-          if (event.source === EventSource.EDITOR) {
-            switch (event.type) {
-              case EditorEventType.ADD_ITEM:
-                this.itemType = event.payload;
-                this.editorService.setCreateItemType(event.payload);
-                this.initializeForm();
-                break;
-              case EditorEventType.SELECT_ITEM:
-                //console.log("select item");
-                break;
-            }
-          }
-        }
-    );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.formData) {
+      // update mode: formData takes priority over itemType input
       this.itemType = this.formData.itemType;
+      this.initializeForm();
+    } else if (changes['itemType'] && this.itemType) {
+      // create mode: itemType comes from parent
       this.initializeForm();
     }
   }
@@ -177,7 +162,7 @@ export class ItemFormComponent implements OnInit, OnChanges {
       const newItem = {
         ...formValueWithoutNewLink,
         itemType: this.itemType,
-        projectId: this.state.currentProject?.id,
+        projectId: this.state.currentProject()?.id,
       };
       this.onItemCreate.emit(newItem);
       this.resetItemForm();

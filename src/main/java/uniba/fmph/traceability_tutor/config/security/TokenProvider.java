@@ -41,7 +41,6 @@ public class TokenProvider {
                 .toList();
 
         byte[] signingKey = jwtSecret.getBytes();
-        System.out.println("signingKey: " + jwtExpirationMinutes);
         var expirationDate = Date.from(ZonedDateTime.now().plusMinutes(jwtExpirationMinutes).toInstant());
         var issuedAt = Date.from(ZonedDateTime.now().toInstant());
         return Jwts.builder()

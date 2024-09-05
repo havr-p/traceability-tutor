@@ -177,7 +177,7 @@ export class EditorService {
         return project;
       }),
       switchMap((project: Project) => {
-        this.state.currentProject = project;
+        this.state.currentProject.set(project);
         return from(this.state.setCurrentProjectSettings(project)).pipe(
           switchMap(() => this.itemService.getProjectEditableItems(project.id)),
           map((items: ItemDTO[]) => ({project, items}))
@@ -324,7 +324,7 @@ export class EditorService {
   }
 
   async fetchCodeItems() {
-    const projectId = this.state.currentProject?.id!;
+    const projectId = this.state.currentProject()?.id!;
 
     try {
       console.log('Starting fetchCodeItems');
@@ -387,11 +387,11 @@ export class EditorService {
   }
 
   getLevelColor(item: Item): string | undefined {
-    return this.state.currentProject?.levels.get(item.data['level'])?.color;
+    return this.state.currentProject()?.levels.get(item.data['level'])?.color;
   }
 
   getLevelName(item: Item): string | undefined {
-    return this.state.currentProject?.levels.get(item.data['level'].toLowerCase())?.color;
+    return this.state.currentProject()?.levels.get(item.data['level'].toLowerCase())?.color;
   }
 
   public exportEditorContents(): void {
@@ -404,7 +404,7 @@ export class EditorService {
       const reader = new FileReader();
       reader.onload = (e) => {
         const fileContent = e.target?.result as string;
-        const params: ImportFileParams = { id: Number(this.state.currentProject?.id) };
+        const params: ImportFileParams = { id: Number(this.state.currentProject()?.id) };
 
         this.projectService.importFile<ContentsDTO>(fileContent, params).subscribe({
           next: (result) => observer.next(result),
@@ -424,7 +424,7 @@ export class EditorService {
     let connectionData = this.editor.getConnections().map(connection => {
       return connection.data
     });
-    let projectConfiguration = this.state.currentProject?.toDto();
+    let projectConfiguration = this.state.currentProject()?.toDto();
     return {items: nodesData, relationships: connectionData, project: projectConfiguration};
   }
 
@@ -435,7 +435,7 @@ export class EditorService {
 
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${this.state.currentProject?.name}-${new Date().toISOString()}.json`;
+    a.download = `${this.state.currentProject()?.name}-${new Date().toISOString()}.json`;
     a.click();
 
     URL.revokeObjectURL(url);
@@ -504,7 +504,7 @@ export class EditorService {
   }
 
   public getLevelNames(itemType: ItemType): string[] {
-    let levels = this.state.currentProject?.levels;
+    let levels = this.state.currentProject()?.levels;
     const excludedLevels = ['Code', 'Design', 'Test'];
 
     if (itemType === ItemType.REQUIREMENT) {
@@ -650,13 +650,17 @@ export class EditorService {
     const graph = structures(this.editor);
     const nodeIds = graph.nodes().map(n => Number(n.id));
     const relationshipIds = graph.connections().map(c => Number(c.id));
-    const req: CreateIterationRequest = {projectId: this.state.currentProject?.id,
+    const req: CreateIterationRequest = {projectId: this.state.currentProject()?.id,
                                                   itemIds: nodeIds,
                                                   relationshipIds: relationshipIds}
     this.iterationService.createIteration(req).subscribe(
         {
           next: (iteration: IterationDTO) => {
-            this.state.currentProject?.addIteration(iteration);
+            const project = this.state.currentProject();
+            if (project) {
+              project.addIteration(iteration);
+              this.state.currentProject.set(project);
+            }
     },
           error: err => {
             console.log(err);
